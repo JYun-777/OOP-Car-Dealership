@@ -4,6 +4,7 @@ import com.oopsAllCars.model.Dealership;
 import com.oopsAllCars.model.Vehicle;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
@@ -14,9 +15,6 @@ public class DealershipFileManager {
         try{
             FileReader fr = new FileReader("src/main/resources/inventory.csv");
             BufferedReader br = new BufferedReader(fr);
-
-            String dealerShipInfo = br.readLine();
-
 
             //first line read
             String dealerInfoLine = br.readLine();
@@ -35,12 +33,28 @@ public class DealershipFileManager {
 
             return readDealership;
         } catch (Exception e) {
+            System.out.println("Cannot find inventory.csv");
             throw new RuntimeException(e);
         }
     }
 
     //save to file
-    public static void saveDealership(Dealership dealership){
+    public void saveDealership(Dealership dealership){
+        try{
+            FileWriter fw = new FileWriter("src/main/resources/inventory.csv");
+            BufferedWriter bw = new BufferedWriter(fw);
 
+            bw.write(dealership.getDealershipData());
+            ArrayList<Vehicle> vehicleList = dealership.getInventory();
+            for (Vehicle v : vehicleList){
+                bw.write(v.getVehicleData());
+            }
+            System.out.println("Saving inventory... count: " + dealership.getInventory().size());
+
+            bw.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
